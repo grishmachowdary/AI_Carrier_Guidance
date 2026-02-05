@@ -84,6 +84,23 @@
     @apply from-card/70 to-card/60 border-border/30;
   }
 
+  /* Navbar dropdown hover states */
+  .navbar-dropdown {
+    @apply opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none group-hover:pointer-events-auto;
+  }
+
+  .navbar-dropdown-item {
+    @apply flex items-center space-x-3 px-4 py-3 hover:bg-muted transition-colors;
+  }
+
+  .navbar-dropdown-item:first-child {
+    @apply rounded-t-lg;
+  }
+
+  .navbar-dropdown-item:last-child {
+    @apply rounded-b-lg;
+  }
+
   /* Professional text styles - FORCE BLACK TEXT */
   .text-professional {
     @apply text-gray-900 !important;
