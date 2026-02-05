@@ -15,7 +15,8 @@ import {
   Briefcase,
   GraduationCap,
   Heart,
-  Zap
+  Zap,
+  Video
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -60,7 +61,7 @@ const quickActions = [
   { title: 'Find Mentors', description: 'Connect with industry experts', icon: Users, href: '/mentor-finder', color: 'bg-green-500' },
   { title: 'AI Chat', description: 'Get personalized guidance', icon: MessageCircle, href: '/chat', color: 'bg-purple-500' },
   { title: 'Career Quiz', description: 'Discover your ideal path', icon: Target, href: '/career-guidance', color: 'bg-orange-500' },
-  { title: 'Become a Mentor', description: 'Share your expertise with others', icon: GraduationCap, href: '/mentor-finder', color: 'bg-teal-500' },
+  { title: 'Industry Talks', description: 'Learn from tech leaders', icon: Video, href: '/industry-talks', color: 'bg-indigo-500' },
   { title: 'Health Hub', description: 'Monitor your physical and mental wellness', icon: Heart, href: '/health', color: 'bg-red-500' }
 ]
 

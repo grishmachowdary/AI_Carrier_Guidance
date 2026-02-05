@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,31 +8,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: 'hsl(220 20% 97%)', // Light blue-gray background
-        foreground: 'hsl(220 15% 15%)', // Dark blue-gray text
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: 'hsl(220 100% 60%)', // Modern blue
-          foreground: 'hsl(0 0% 100%)',
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(220 20% 90%)',
-          foreground: 'hsl(220 15% 25%)',
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         muted: {
-          DEFAULT: 'hsl(220 15% 95%)',
-          foreground: 'hsl(220 10% 45%)',
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: 'hsl(220 20% 92%)',
-          foreground: 'hsl(220 15% 25%)',
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
         },
         card: {
-          DEFAULT: 'hsl(0 0% 100%)',
-          foreground: 'hsl(220 15% 15%)',
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
-        border: 'hsl(220 15% 88%)',
-        input: 'hsl(220 15% 95%)',
-        ring: 'hsl(220 100% 60%)',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
       },
       borderRadius: {
         lg: '0.75rem',

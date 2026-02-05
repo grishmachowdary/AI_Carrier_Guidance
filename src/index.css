@@ -6,26 +6,48 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 20% 97%;
+    --foreground: 220 15% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 15% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220.9 39.3% 11%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 220 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 90%;
+    --secondary-foreground: 220 15% 25%;
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 220 20% 92%;
+    --accent-foreground: 220 15% 25%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
+    --border: 220 15% 88%;
+    --input: 220 15% 95%;
+    --ring: 220 100% 60%;
     --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 220 15% 8%;
+    --foreground: 220 10% 95%;
+    --card: 220 15% 10%;
+    --card-foreground: 220 10% 95%;
+    --popover: 220 15% 10%;
+    --popover-foreground: 220 10% 95%;
+    --primary: 220 100% 65%;
+    --primary-foreground: 220 15% 8%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 220 10% 85%;
+    --muted: 220 15% 12%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 220 15% 15%;
+    --accent-foreground: 220 10% 85%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 15% 20%;
+    --input: 220 15% 15%;
+    --ring: 220 100% 65%;
   }
 
   * {
@@ -36,49 +58,6 @@
     @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: #000000 !important;
-  }
-  
-  /* FORCE ALL TEXT TO BE BLACK - STRONGER OVERRIDE */
-  *, *::before, *::after {
-    color: #000000 !important;
-  }
-  
-  /* Override specific elements that should stay colored */
-  .text-gradient,
-  .bg-gradient-to-r,
-  .text-primary,
-  .text-blue-600,
-  .text-green-600,
-  .text-orange-600,
-  .text-yellow-600,
-  .text-red-600,
-  .text-white,
-  .badge-primary,
-  .badge-success,
-  .badge-warning,
-  .badge-secondary,
-  .bg-primary,
-  .bg-blue-600,
-  .bg-green-600,
-  .bg-red-600,
-  .bg-yellow-600,
-  .bg-orange-600,
-  button.bg-blue-600,
-  button.bg-primary,
-  .text-primary-foreground,
-  .text-white {
-    color: revert !important;
-  }
-  
-  /* Ensure white backgrounds have black text */
-  .bg-white, .bg-white * {
-    color: #000000 !important;
-  }
-  
-  /* Override card text specifically */
-  .card *, .Card *, [class*="card"] * {
-    color: #000000 !important;
   }
   
   html {
@@ -87,13 +66,22 @@
 }
 
 @layer components {
-  /* Glass morphism effect - Light theme only */
+  /* Glass morphism effect */
   .glass-card {
-    @apply backdrop-blur-md bg-white/95 border border-white/20 shadow-xl rounded-xl;
+    @apply backdrop-blur-md bg-card/95 border border-border shadow-xl rounded-xl;
   }
 
   .glass-hero {
-    @apply backdrop-blur-lg bg-gradient-to-br from-white/90 to-white/80 border border-white/30 shadow-2xl rounded-2xl;
+    @apply backdrop-blur-lg bg-gradient-to-br from-card/90 to-card/80 border border-border shadow-2xl rounded-2xl;
+  }
+
+  /* Dark mode glass effects */
+  .dark .glass-card {
+    @apply bg-card/80 border-border/50;
+  }
+
+  .dark .glass-hero {
+    @apply from-card/70 to-card/60 border-border/30;
   }
 
   /* Professional text styles - FORCE BLACK TEXT */

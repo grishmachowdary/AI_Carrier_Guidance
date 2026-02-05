@@ -11,9 +11,16 @@ import {
   Briefcase,
   Menu,
   X,
-  Heart
+  Heart,
+  Moon,
+  Sun,
+  Search,
+  Video
 } from 'lucide-react'
 import { useState } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
+import { GlobalSearch } from '@/components/GlobalSearch'
+import { NotificationDropdown } from '@/components/NotificationDropdown'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -23,12 +30,15 @@ const navigation = [
   { name: 'AI Chat', href: '/chat', icon: MessageCircle },
   { name: 'Community', href: '/community', icon: Users2 },
   { name: 'Opportunities', href: '/opportunities', icon: Briefcase },
+  { name: 'Industry Talks', href: '/industry-talks', icon: Video },
   { name: 'Health', href: '/health', icon: Heart },
 ]
 
 export function Navbar() {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const { isDarkMode, toggleDarkMode } = useDarkMode()
   
   // Mock user data - in real app this would come from auth context
   const user = {
@@ -41,7 +51,7 @@ export function Navbar() {
   const isActive = (path: string) => location.pathname === path
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-lg">
+    <nav className="bg-card border-b border-border sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo - Left Side */}
@@ -52,7 +62,7 @@ export function Navbar() {
                 alt="MentorX Logo" 
                 className="w-12 h-12 object-contain"
               />
-              <span className="text-2xl font-bold text-gradient" style={{ color: '#000000' }}>MentorX</span>
+              <span className="text-2xl font-bold text-gradient text-foreground">MentorX</span>
             </Link>
           </div>
 
@@ -67,7 +77,7 @@ export function Navbar() {
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 text-sm ${
                     isActive(item.href)
                       ? 'bg-primary text-primary-foreground shadow-lg'
-                      : 'hover:bg-gray-100 text-gray-700'
+                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -77,13 +87,38 @@ export function Navbar() {
             })}
           </div>
 
-          {/* User Profile - Right Side */}
+          {/* User Profile & Actions - Right Side */}
           <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSearchOpen(true)}
+              className="hover:scale-105 transition-all duration-300 text-muted-foreground hover:text-foreground"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              <span className="hidden xl:inline">Search</span>
+              <kbd className="hidden xl:inline-flex ml-2 pointer-events-none h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                ⌘K
+              </kbd>
+            </Button>
+            <NotificationDropdown />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleDarkMode}
+              className="hover:scale-105 transition-all duration-300"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </Button>
             <div className="flex items-center space-x-3">
               <div className="badge-primary">
                 Level {user.level}
               </div>
-              <span className="font-medium text-sm" style={{ color: '#000000' }}>
+              <span className="font-medium text-sm text-foreground">
                 {user.xp} XP
               </span>
             </div>
@@ -96,7 +131,27 @@ export function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(true)}
+              className="hover:scale-105 transition-all duration-300"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleDarkMode}
+              className="hover:scale-105 transition-all duration-300"
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </Button>
             <Button
               variant="ghost"
               size="icon"
@@ -114,7 +169,7 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200/60 animate-slide-up">
+          <div className="lg:hidden py-4 border-t border-border animate-slide-up">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => {
                 const Icon = item.icon
@@ -126,7 +181,7 @@ export function Navbar() {
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
                       isActive(item.href)
                         ? 'bg-primary text-primary-foreground shadow-lg'
-                        : 'hover:bg-gray-100 text-gray-700'
+                        : 'hover:bg-muted text-muted-foreground hover:text-foreground'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -136,7 +191,7 @@ export function Navbar() {
               })}
               
               {/* Mobile User Info */}
-              <div className="flex items-center justify-between px-4 py-4 mt-4 border-t border-gray-200/60">
+              <div className="flex items-center justify-between px-4 py-4 mt-4 border-t border-border">
                 <div className="flex items-center space-x-3">
                   <Avatar className="w-10 h-10 ring-2 ring-primary/20">
                     <AvatarImage src={user.avatar} alt={user.name} />
@@ -145,8 +200,8 @@ export function Navbar() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold text-gray-900">{user.name}</p>
-                    <p className="text-sm text-gray-600">Level {user.level} • {user.xp} XP</p>
+                    <p className="font-semibold text-foreground">{user.name}</p>
+                    <p className="text-sm text-muted-foreground">Level {user.level} • {user.xp} XP</p>
                   </div>
                 </div>
               </div>
@@ -154,6 +209,12 @@ export function Navbar() {
           </div>
         )}
       </div>
+      
+      {/* Global Search Modal */}
+      <GlobalSearch 
+        isOpen={isSearchOpen} 
+        onClose={() => setIsSearchOpen(false)} 
+      />
     </nav>
   )
 }

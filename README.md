@@ -45,6 +45,51 @@ MentorX is a comprehensive educational platform that combines AI-powered career 
 - Real-time job/internship discovery and matching
 - Requirements-based filtering algorithms
 
+### 🌙 Dark Mode Support
+- System preference detection with manual toggle
+- Smooth transitions and optimized color schemes
+- Persistent user preference storage
+
+### 🔔 Smart Notifications
+- Browser push notifications for streaks and achievements
+- In-app notification center with categorization
+- Mentor message alerts and opportunity matches
+- Customizable notification preferences
+
+### 🔍 Global Search
+- Universal search across mentors, opportunities, and community posts
+- Real-time filtering with advanced search capabilities
+- Keyboard shortcuts (⌘K) for quick access
+- Smart categorization and result ranking
+
+### 🎤 Industry Insider Talks
+- Live sessions with professionals from top tech companies
+- Interactive Q&A with industry leaders
+- Recorded sessions for on-demand learning
+- Registration system with attendee management
+- Multi-level content (Beginner, Intermediate, Advanced)
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **React 18.3.1** - Modern React with latest features
+- **TypeScript** - Type-safe development
+- **Vite** - Lightning-fast build tool with HMR
+- **Tailwind CSS** - Utility-first CSS framework with dark mode
+- **shadcn/ui** - Beautiful, accessible UI components
+
+### AI/ML Features
+- Custom sentiment analysis algorithms
+- RAG (Retrieval-Augmented Generation) implementation
+- Adaptive learning algorithms with performance tracking
+- Multi-factor matching systems
+
+### Architecture
+- Component-based design with TypeScript interfaces
+- Custom hooks for state management and localStorage persistence
+- Modular service architecture for AI, data, and business logic
+- Responsive design with mobile-first approach
+
 ## 🛠️ Technology Stack
 
 ### Frontend
