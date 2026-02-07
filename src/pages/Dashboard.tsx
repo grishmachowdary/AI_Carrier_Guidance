@@ -13,7 +13,6 @@ import {
   Star,
   ArrowRight,
   Briefcase,
-  GraduationCap,
   Heart,
   Zap,
   Video

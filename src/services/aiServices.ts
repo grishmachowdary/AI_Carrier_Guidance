@@ -1,5 +1,6 @@
 import KnowledgeBase from './knowledgeBase'
 import { careerRoadmaps } from './careerRoadmaps'
+import LLMService from './llmService'
 
 // Enhanced Career Guidance AI Service with Requirements-Based Matching
 export class CareerAIService {
@@ -478,7 +479,7 @@ export class MentorAIService {
     return reasons
   }
 }
-// Enhanced Chat AI Service with Advanced Sentiment Analysis
+// Enhanced Chat AI Service with Advanced Sentiment Analysis and LLM Fallback
 export class ChatAIService {
   static generateResponse(message: string, mode: string, _emotionalContext?: any): string {
     // Detect enhanced emotion
@@ -493,6 +494,56 @@ export class ChatAIService {
     
     // Fallback to general responses if no specific knowledge found
     return this.generateGeneralResponse(message, mode, emotion)
+  }
+
+  // Async version with LLM fallback support
+  static async generateResponseWithLLM(message: string, mode: string, _emotionalContext?: any): Promise<{
+    content: string
+    usedLLM: boolean
+    provider?: string
+    knowledgeUsed: boolean
+  }> {
+    // Detect enhanced emotion
+    const emotion = this.detectEnhancedEmotion(message)
+    
+    // First, try to find relevant knowledge
+    const knowledgeResults = KnowledgeBase.searchKnowledge(message)
+    
+    // If we have good knowledge base results, use them
+    if (knowledgeResults.length > 0) {
+      return {
+        content: this.generateKnowledgeBasedResponse(message, knowledgeResults[0], mode, emotion),
+        usedLLM: false,
+        knowledgeUsed: true
+      }
+    }
+    
+    // Check if we should use LLM fallback
+    if (LLMService.isEnabled()) {
+      try {
+        const llmResponse = await LLMService.generateResponse(message, {
+          mode,
+          emotion
+        })
+        
+        return {
+          content: llmResponse.content,
+          usedLLM: llmResponse.usedLLM,
+          provider: llmResponse.provider,
+          knowledgeUsed: false
+        }
+      } catch (error) {
+        console.error('LLM fallback error:', error)
+        // Fall through to general response
+      }
+    }
+    
+    // Final fallback to general responses
+    return {
+      content: this.generateGeneralResponse(message, mode, emotion),
+      usedLLM: false,
+      knowledgeUsed: false
+    }
   }
 
   private static generateKnowledgeBasedResponse(

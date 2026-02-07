@@ -11,14 +11,12 @@ import {
   Heart,
   Share2,
   BookmarkPlus,
-  Filter,
   Search,
   Video,
-  MapPin,
   Building,
   Star
 } from 'lucide-react'
-import { formatDistanceToNow, format } from 'date-fns'
+import { format } from 'date-fns'
 
 interface IndustryTalk {
   id: string

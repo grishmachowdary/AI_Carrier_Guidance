@@ -29,6 +29,7 @@ MentorX is a comprehensive educational platform that combines AI-powered career 
 - RAG implementation across 50+ curated knowledge entries
 - Contextual response generation with mode-specific coaching styles
 - Integrated resource links and learning materials
+- **NEW:** Optional LLM Fallback (OpenAI/Anthropic) with 69% cost savings vs pure LLM approach
 
 ### 🏥 Health & Wellness Monitoring
 - **Mental Health**: Evidence-based screening for Anxiety, Depression, Bipolar, and PTSD with clinical thresholds

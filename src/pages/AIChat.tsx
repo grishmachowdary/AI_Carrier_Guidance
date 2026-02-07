@@ -24,10 +24,12 @@ import {
   Star,
   HelpCircle,
   Coffee,
-  ExternalLink
+  ExternalLink,
+  Settings
 } from 'lucide-react'
 import { ChatAIService } from '@/services/aiServices'
 import KnowledgeBase from '@/services/knowledgeBase'
+import { LLMSettings } from '@/components/LLMSettings'
 
 interface ChatMessage {
   id: string
@@ -44,6 +46,8 @@ interface ChatMessage {
   knowledgeUsed?: boolean
   resourcesIncluded?: boolean
   followUpSuggestions?: string[]
+  usedLLM?: boolean
+  llmProvider?: string
 }
 
 const coachingModes = [
@@ -104,6 +108,7 @@ export function AIChat() {
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [showQuickStart, setShowQuickStart] = useState(true)
+  const [showSettings, setShowSettings] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -114,7 +119,7 @@ export function AIChat() {
     scrollToBottom()
   }, [messages])
 
-  const generateAIResponse = (userMessage: string): ChatMessage => {
+  const generateAIResponse = async (userMessage: string): Promise<ChatMessage> => {
     // Use enhanced emotion detection
     const detectedEmotion = ChatAIService.detectEnhancedEmotion(userMessage)
     
@@ -125,28 +130,53 @@ export function AIChat() {
       enhancedEmotion: detectedEmotion
     }
 
-    const response = ChatAIService.generateResponse(userMessage, selectedMode, emotionalContext)
-    const followUpSuggestions = ChatAIService.generateFollowUpSuggestions(userMessage)
-    
-    // Check if knowledge base was used and if resources are included
-    const knowledgeResults = KnowledgeBase.searchKnowledge(userMessage)
-    const knowledgeUsed = knowledgeResults.length > 0
-    const resourcesIncluded = knowledgeUsed && knowledgeResults[0]?.resources && knowledgeResults[0].resources.length > 0
+    // Try to use LLM fallback if enabled
+    try {
+      const result = await ChatAIService.generateResponseWithLLM(userMessage, selectedMode, emotionalContext)
+      const followUpSuggestions = ChatAIService.generateFollowUpSuggestions(userMessage)
+      
+      // Check if resources are included
+      const knowledgeResults = KnowledgeBase.searchKnowledge(userMessage)
+      const resourcesIncluded = result.knowledgeUsed && knowledgeResults[0]?.resources && knowledgeResults[0].resources.length > 0
 
-    return {
-      id: Date.now().toString(),
-      content: response,
-      sender: 'ai',
-      timestamp: new Date(),
-      emotionalContext,
-      coachingMode: selectedMode,
-      knowledgeUsed,
-      resourcesIncluded,
-      followUpSuggestions: followUpSuggestions.slice(0, 3)
+      return {
+        id: Date.now().toString(),
+        content: result.content,
+        sender: 'ai',
+        timestamp: new Date(),
+        emotionalContext,
+        coachingMode: selectedMode,
+        knowledgeUsed: result.knowledgeUsed,
+        resourcesIncluded,
+        followUpSuggestions: followUpSuggestions.slice(0, 3),
+        usedLLM: result.usedLLM,
+        llmProvider: result.provider
+      }
+    } catch (error) {
+      // Fallback to synchronous method if async fails
+      const response = ChatAIService.generateResponse(userMessage, selectedMode, emotionalContext)
+      const followUpSuggestions = ChatAIService.generateFollowUpSuggestions(userMessage)
+      
+      const knowledgeResults = KnowledgeBase.searchKnowledge(userMessage)
+      const knowledgeUsed = knowledgeResults.length > 0
+      const resourcesIncluded = knowledgeUsed && knowledgeResults[0]?.resources && knowledgeResults[0].resources.length > 0
+
+      return {
+        id: Date.now().toString(),
+        content: response,
+        sender: 'ai',
+        timestamp: new Date(),
+        emotionalContext,
+        coachingMode: selectedMode,
+        knowledgeUsed,
+        resourcesIncluded,
+        followUpSuggestions: followUpSuggestions.slice(0, 3),
+        usedLLM: false
+      }
     }
   }
 
-  const handleSendMessage = (messageText?: string) => {
+  const handleSendMessage = async (messageText?: string) => {
     const messageToSend = messageText || inputMessage
     if (!messageToSend.trim()) return
 
@@ -163,8 +193,8 @@ export function AIChat() {
     setIsTyping(true)
 
     // Simulate AI thinking time
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(messageToSend)
+    setTimeout(async () => {
+      const aiResponse = await generateAIResponse(messageToSend)
       setMessages(prev => [...prev, aiResponse])
       setIsTyping(false)
     }, 1500)
@@ -403,6 +433,13 @@ export function AIChat() {
         </CardContent>
       </Card>
 
+      {/* LLM Settings */}
+      {showSettings && (
+        <div className="animate-in slide-in-from-top duration-300">
+          <LLMSettings />
+        </div>
+      )}
+
       {/* Quick Start Questions */}
       {showQuickStart && (
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 shadow-lg">
@@ -460,6 +497,15 @@ export function AIChat() {
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Clear Chat
               </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowSettings(!showSettings)}
+                className={showSettings ? 'bg-blue-50 border-blue-300' : ''}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                LLM Settings
+              </Button>
             </div>
           </div>
 
@@ -509,6 +555,12 @@ export function AIChat() {
                               <Badge className="bg-blue-100 text-blue-800 text-xs">
                                 <ExternalLink className="w-3 h-3 mr-1" />
                                 Resources Included
+                              </Badge>
+                            )}
+                            {message.usedLLM && (
+                              <Badge className="bg-purple-100 text-purple-800 text-xs">
+                                <Zap className="w-3 h-3 mr-1" />
+                                LLM {message.llmProvider ? `(${message.llmProvider})` : ''}
                               </Badge>
                             )}
                           </div>
